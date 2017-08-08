@@ -49,3 +49,6 @@ ENV/
 
 # config
 *.ini
+
+# logs
+*.log
