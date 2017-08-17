@@ -1,5 +1,7 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 import os
+
+iso_seconds_format = '%Y-%m-%dT%H:%M:%SZ'
 
 
 def record(target, inside_temp, outside_temp):
@@ -9,18 +11,35 @@ def record(target, inside_temp, outside_temp):
     file_name = get_file_name(now)
     with open(file_name, 'a') as file:
         file.write('{timestamp};{target};{inside};{outside}\n'.format(
-            timestamp=now.isoformat(),
+            timestamp=now.strftime(iso_seconds_format),
             target=target,
             inside=inside_temp,
             outside=outside_temp,
         ))
 
 
-def get_last(hours):
+def get_last(nb_hours):
     date = datetime.utcnow()
-    while hours > 0:
-        with open(get_file_name(date), 'r') as file:
-            file.readlines()
+    past = date - timedelta(hours=nb_hours)
+    hours = []
+    while True:
+        try:
+            with open(get_file_name(date), 'r') as file:
+                lines = file.readlines()
+        except FileNotFoundError:
+            return reversed(hours)
+
+        for line in reversed(lines):
+            splitted = line.split(';')
+            date_str = splitted[0]
+            try:
+                line_date = datetime.strptime(iso_seconds_format, date_str)
+            except ValueError:
+                line_date = datetime.strptime('%Y-%m-%dT%H:%M:%S.%f', date_str)
+            if line_date < past:
+                return reversed(hours)
+            hours.append(splitted)
+        date = date - timedelta(days=1)
 
 
 def get_dir_name(year):

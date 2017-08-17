@@ -10,7 +10,7 @@ app = Flask(__name__)
 def index():
     return render_template('index.html',
                            target_temp=config.fan_section['target_temp'],
-                           records=record.get_last(hours=24),
+                           records=record.get_last(nb_hours=24),
                            )
 
 if __name__ == '__main__':

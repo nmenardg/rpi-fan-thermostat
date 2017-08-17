@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+{% block body %}
+<table>
+    <thead>
+    <tr>
+        <th>Date</th>
+        <th>Target</th>
+        <th>Inside</th>
+        <th>Outside</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for record in records %}
+    <tr>
+        {% for record_part in record %}
+        <td>{{ record_part }}</td>
+        {% endfor %}
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
