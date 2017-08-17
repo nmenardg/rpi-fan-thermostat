@@ -33,9 +33,9 @@ def get_last(nb_hours):
             splitted = line.split(';')
             date_str = splitted[0]
             try:
-                line_date = datetime.strptime(iso_seconds_format, date_str)
+                line_date = datetime.strptime(date_str, iso_seconds_format)
             except ValueError:
-                line_date = datetime.strptime('%Y-%m-%dT%H:%M:%S.%f', date_str)
+                line_date = datetime.strptime(date_str, '%Y-%m-%dT%H:%M:%S.%f')
             if line_date < past:
                 return reversed(hours)
             hours.append(splitted)
@@ -47,4 +47,4 @@ def get_dir_name(year):
 
 
 def get_file_name(date):
-    return os.path.join(get_dir_name(date), date.strftime('%Y-%m-%d') + '.record')
+    return os.path.join(get_dir_name(date.year), date.strftime('%Y-%m-%d') + '.record')
